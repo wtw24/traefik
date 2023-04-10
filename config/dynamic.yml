@@ -1,0 +1,26 @@
+# Dynamic configuration
+http:
+  routers:
+    traefik:
+      rule: "Host(`traefik.app.localhost`)"
+      service: "api@internal"
+      middlewares: "user-auth@file"
+      tls:
+        domains:
+          - main: "app.localhost"
+            sans:
+              - "*.app.localhost"
+          - main: "app.loc"
+            sans:
+              - "*.app.loc"
+
+  middlewares:
+    user-auth:
+      basicAuth:
+        realm: "Restricted area"
+        usersFile: "/auth/.htpasswd"
+
+tls:
+  certificates:
+    - certFile: "/etc/certs/local-cert.pem"
+      keyFile: "/etc/certs/local-key.pem"
